@@ -1,12 +1,16 @@
 from flask_sqlalchemy import SQLAlchemy
 from typing import Union
 from flask_bcrypt import Bcrypt
+from uuid import uuid4
 
 db = SQLAlchemy()
 
+def get_uuid():
+    return uuid4().hex
+
 class User(db.Model):
     __tablename__ = "users"
-    id = db.Column(db.Integer, primary_key=True, index=True)
+    id = db.Column(db.String(32), primary_key=True, unique=True, default=get_uuid)
     email = db.Column(db.String(150), unique=True, index=True,nullable=False)
     password = db.Column(db.String,nullable=False)
 

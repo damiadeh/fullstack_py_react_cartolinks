@@ -9,3 +9,8 @@ class ApplicationConfig:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = True
     SQLALCHEMY_DATABASE_URI = r"sqlite:///./db.sqlite"
+
+    SESSION_TYPE = "filesystem"
+    SESSION_PERMANENT = False
+    SESSION_USE_SIGNER = True
+    PERMANENT_SESSION_LIFETIME=3600 # Session timeout in  (1 hour)
