@@ -35,3 +35,37 @@ def login_user():
         "email": user.email
     } , message="Login successful")  
 
+@api.route("/folder")
+def get_folder_content():
+    user_id = session.get("user_id")
+    if not user_id:
+        return handle_response(None, status=401)
+    
+    parent_id = request.args["parent_id"]
+    print("parent_id")
+    print(parent_id)
+    directory = Directory.query.filter_by(id=parent_id).first()
+    if parent_id and directory is None:
+        return handle_response(None,message= "Folder not found", status=404)
+    
+    directories,files = [],[]
+    if parent_id:
+        directories = Directory.query.filter_by(parent_id=parent_id).all()
+        files = File.query.filter_by(directory_id=parent_id).all()
+    else:
+        directories = Directory.query.filter_by(parent_id=None).all()
+        files = File.query.filter_by(directory_id=None).all()
+    
+    dirList = [{'id': dir.id,'name': dir.name, 'type': 'dir', "size": 0} for dir in directories]
+    fileList = [{'id': file.id,'name': file.name, 'type': 'file', "size": file.size} for file in files]
+
+    response = {
+        "id": directory.id if directory is not None else None,
+        "name": directory.name if directory is not None else ".",
+        "type": "dir",
+        "size": 0,
+        "contents": [*dirList , *fileList ]
+    }
+    return handle_response(response, message="content fetched successfully")
+
+
