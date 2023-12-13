@@ -1,0 +1,6 @@
+flask
+flask-bcrypt
+flask-sqlalchemy
+python-dotenv
+flask-session
+flask-cors
