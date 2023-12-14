@@ -13,7 +13,7 @@ app = Flask(__name__)
 app.config.from_object(ApplicationConfig)
 
 bcrypt = Bcrypt(app)
-# CORS(app, supports_credentials=True)
+CORS(app, supports_credentials=True)
 db.init_app(app)
 
 # create db and seed data into it

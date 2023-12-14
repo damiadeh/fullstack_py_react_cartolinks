@@ -5,8 +5,3 @@ def handle_response(data, is_success = True , message: str = None, status: int =
         "data": data,
         "message": message
     }), 400 if data is None else status
-
-
-def user_is_authenticated():
-    user_id = session.get("user_id")
-    return user_id is not None
