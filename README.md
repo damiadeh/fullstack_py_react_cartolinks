@@ -23,3 +23,5 @@ To achieve the minimum viable product a user must be able to do the following:
 
 ## System Architecture Strategy
 To ensure security, we will be storing the user sessions on the server, using HTTPOnly cookies to help protect against cross-site scripting (XSS) attacks. 
+
+<img src="./design.png" height="300" />
