@@ -1,16 +1,32 @@
-from pickle import GET
-from flask import Flask,  request, jsonify, session
+from flask import Flask
 from config import ApplicationConfig
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from models import db
 from db import seed_database
-from models import User
-from utils import handle_response
 from routes import api
+from werkzeug.exceptions import HTTPException
+import traceback
+from utils import handle_response
 
 app = Flask(__name__)
 app.config.from_object(ApplicationConfig)
+
+@app.errorhandler(Exception)
+def handle_global_exception(error):
+    message = 'Internal Server Error'
+    status_code = 500
+
+    if isinstance(error, HTTPException):
+        message = error.description
+        status_code = error.code
+    #We can check for other instance of exception and handle as needed
+
+    # Print the exception to the console for debugging
+    # We can also logging servive to log the error
+    traceback.print_exc()  
+
+    return handle_response(None, message= message, status=status_code)
 
 bcrypt = Bcrypt(app)
 CORS(app, supports_credentials=True)
