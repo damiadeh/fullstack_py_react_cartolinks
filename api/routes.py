@@ -4,6 +4,7 @@ from flask import Flask, request, jsonify, session, Blueprint
 from flask_bcrypt import Bcrypt
 from models import User, Directory, File
 from utils import handle_response
+from filters import authenticate_required
 
 api = Blueprint('api', __name__)
 
@@ -36,11 +37,8 @@ def login_user():
     } , message="Login successful")  
 
 @api.route("/folder")
+@authenticate_required 
 def get_folder_content():
-    user_id = session.get("user_id")
-    if not user_id:
-        return handle_response(None, status=401)
-    
     parent_id = request.args["parent_id"]
     print("parent_id")
     print(parent_id)
