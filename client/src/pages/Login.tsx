@@ -1,77 +1,74 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useGlobalState } from '../context/GlobalContext';
 import { useGlobalDispatch } from '../context/GlobalContext';
 
 const LoginPage: React.FC = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState(null);
-    const {isAuthenticated, isLoading} = useGlobalState();
-    const dispatch = useGlobalDispatch();
-    const navigate = useNavigate();
-  
-    const handleLogin = async (e: any) => {
-        e.preventDefault();
-        console.log(email, password);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
+  const dispatch = useGlobalDispatch();
+
+  const handleLogin = async (e: any) => {
+    e.preventDefault();
+    console.log(email, password);
+    dispatch({ type: 'TOGGLE_ISLOADING' });
+    setError(null);
+    // should have api or http service that makes all http calls and act as an interceptor and pass callbacks
+    try {
+      const response = await fetch('//localhost:5000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        // Successful login
+        let res = await response.json()
+        console.log('Login successful');
+
+        dispatch({ type: 'LOGIN' });
+      } else {
+        // Handle login failure
         dispatch({ type: 'TOGGLE_ISLOADING' });
-        setError(null);
-        // should have api or http service that makes all http calls and act as an interceptor and pass callbacks
-        try {
-            const response = await fetch('//localhost:5000/api/login', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              credentials: 'include',
-              body: JSON.stringify({ email, password }),
-            });
-      
-            if (response.ok) {
-              // Successful login
-              let res = await response.json()
-              console.log('Login successful');
-              
-              dispatch({ type: 'LOGIN' });
-            } else {
-              // Handle login failure
-              dispatch({ type: 'TOGGLE_ISLOADING' });
-              console.error('Login failed', response);
-            }
-          } catch (error) {
-            dispatch({ type: 'TOGGLE_ISLOADING' });
-            alert("An error occured")
-            console.error('Error during login:', error);
-          }
-    };
-  
-    return (
-        <LoginPageContainer>
-        <LoginBox>
-          <h2>Login</h2>
-          <LoginForm>
-            <InputLabel>Email:</InputLabel>
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-            />
-            <InputLabel>Password:</InputLabel>
-            <Input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-            />
-            {error && <LoginError>{error}</LoginError>}
-            <LoginButton onClick={handleLogin}>Login</LoginButton>
-          </LoginForm>
-        </LoginBox>
-      </LoginPageContainer>
-  
-    );
+        console.error('Login failed', response);
+      }
+    } catch (error) {
+      dispatch({ type: 'TOGGLE_ISLOADING' });
+      alert("An error occured")
+      console.error('Error during login:', error);
+    }
+  };
+
+  return (
+    <LoginPageContainer>
+      <LoginBox>
+        <h2>Login</h2>
+        <LoginForm>
+          <InputLabel>Email:</InputLabel>
+          <Input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+          />
+          <InputLabel>Password:</InputLabel>
+          <Input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter your password"
+          />
+          {error && <LoginError>{error}</LoginError>}
+          <LoginButton onClick={handleLogin}>Login</LoginButton>
+        </LoginForm>
+      </LoginBox>
+    </LoginPageContainer>
+
+  );
 };
 const LoginPageContainer = styled.div`
   display: flex;

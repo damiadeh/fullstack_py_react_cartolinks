@@ -8,7 +8,7 @@ const Home = () => {
 
     if (!isAuthenticated) {
         return <Navigate to={"/login"} />;
-    }else{
+    } else {
         return <Navigate to={"/files"} />;
     }
 }

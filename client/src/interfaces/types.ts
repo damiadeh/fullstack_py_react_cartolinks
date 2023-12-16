@@ -9,4 +9,4 @@ export interface FileType {
     name: string;
     type: 'dir' | 'file';
     id: number;
-  }
+}

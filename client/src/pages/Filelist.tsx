@@ -48,11 +48,11 @@ const FilesList: React.FC = () => {
     if (file.type != "dir") return;
     //TODO: fetch file using using Id
     navigate(getNewURLPath(file.id));
-      console.log("fetch dir")
+    console.log("fetch dir")
   }
 
   const getNewURLPath = (parentId: number): string => {
-    const currentPath =location.pathname+location.search;
+    const currentPath = location.pathname + location.search;
     if (currentPath.includes("parents") && !parents?.length) {
       return `${currentPath}${parentId}`
     } else if (currentPath.includes("parents")) {
